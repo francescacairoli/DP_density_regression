@@ -80,7 +80,7 @@ def gibbs_mean(y, x, n_iter, burn_in, hypers, alpha, psi):
         for i in range(N):
 
             S_1hot = np.eye(nclusters + 1)[S][:, 1:]
-            PDF = norm.pdf(np.ones(nclusters) * y[i], loc=np.dot(teta, x[i]), scale=np.ones(nclusters) * np.sqrt(1 / tau))
+            PDF = norm.pdf(np.ones(nclusters) * y[i], loc=np.dot(theta, x[i]), scale=np.ones(nclusters) * np.sqrt(1 / tau))
             qih = np.hstack((alpha * marginal(y[i], x[i], beta, Sigma_beta_rec, tau), np.dot(S_1hot.T, W[i]) * PDF))
             qih = qih / np.sum(qih)
 
@@ -156,21 +156,21 @@ def predictive_estimator(x, x_new, y_grid, T, k, S, theta, tau, S_beta_rec, beta
             k_t = int(k[t])
             S_1hot = np.eye(k_t + 1)[S[t]][:, 1:]
 
-            norm = alpha+np.sum(W_new)
+            den = alpha+np.sum(W_new)
             weight = np.dot(S_1hot.T, W_new)
 
             normal_0 = scipy.stats.norm(np.dot(x_new.T, beta[t]), np.sqrt(1 / tau[t]))
-            y[t] = alpha * normal_0.pdf(y_grid[i]) / norm
+            y[t] = alpha * normal_0.pdf(y_grid[i]) / den
             for h in range(k_t):
                 normal_h = scipy.stats.norm(np.dot(x_new.T, theta[t][h]), np.sqrt(1 / tau[t]))
-                y[t] += weight[h] * normal_h.pdf(y_grid[i]) / norm
+                y[t] += weight[h] * normal_h.pdf(y_grid[i]) / den
         y_density[i] = np.mean(y)
 
     return y_density
 
 
 
-def expected_pred_density(x, x_new, T, k, S, theta, beta, alpha, psi, prec):
+def expected_pred_density(x, x_new, T, k, S, theta, beta, alpha, psi):
     exp_y = np.zeros(T)
 
     W_new = [w_kernel(xi, x_new, psi) for xi in x]

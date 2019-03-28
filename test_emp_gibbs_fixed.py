@@ -1,6 +1,6 @@
 import pickle
-from generate_synthetic_data import *
-from empirical_giibs_fixed_prec import *
+from my_code.generate_synthetic_data import *
+from my_code.empirical_gibbs_fixed_prec import *
 
 import numpy as np
 
@@ -8,15 +8,15 @@ import numpy as np
 Test on simulated data from a mixture of normals
 '''
 
-N = 1000
+N = 50
 alpha = 0.5
 psi = N / 25
 
 dim = 2
 
-compute = False
+compute = True
 
-file_name = "tentativo_2dkernel"
+file_name = "first_fixed_trial"
 
 
 if compute:
@@ -59,7 +59,7 @@ x2 = np.linspace(x[:, 1].min(), x[:, 1].max(), n_xnew)
 pp_x = np.array([np.array([x1[i], x2[i]]) for i in range(0, n_xnew)]) # test set
 T = 500 # number of iterations to average over
 
-mean_bhv = False
+
 perc_bhv = True
 expected_predictive_density = True
 
